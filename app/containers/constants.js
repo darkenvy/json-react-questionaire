@@ -8,3 +8,6 @@
  * Follow this format:
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
+
+export const UPDATE_QUESTIONS = 'MAIN_REDUCER/UPDATE_QUESTIONS';
+export const MOVE_QUESTION = 'MAIN_REDUCER/MOVE_QUESTION';

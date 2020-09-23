@@ -1,19 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { MOVE_QUESTION } from 'containers/constants';
 import { StyledQuestion } from './styles';
 
-export class HomePage extends React.Component {
+export class Form extends React.Component {
   state = {
     draggingIndex: null,
     draggedOverIndex: null,
-    questions: [
-      'What is your name?',
-      'What is your quest?',
-      'What is your favourite colour?',
-      'What is the airspeed velocity of an unladen swallow?',
-      'What is the capital of Assyria',
-      'Which is best? African or European Swallows?',
-      'What animal could carry a coconut to a temperate zone?',
-    ],
+  };
+
+  static propTypes = {
+    moveQuestion: PropTypes.func.isRequired,
+    questionList: PropTypes.array.isRequired,
   };
 
   setDragging = idx => {
@@ -43,25 +42,17 @@ export class HomePage extends React.Component {
   };
 
   compare = () => {
-    const { questions, draggingIndex, draggedOverIndex } = this.state;
-    const questionToMove = questions[draggingIndex];
-    const newQuestionList = questions.slice(); // shallow copy
+    const { draggingIndex, draggedOverIndex } = this.state;
 
-    newQuestionList.splice(draggingIndex, 1);
-    newQuestionList.splice(draggedOverIndex, 0, questionToMove);
-
-    this.setState(state => ({
-      ...state,
-      questions: newQuestionList,
-    }));
+    this.props.moveQuestion(draggingIndex, draggedOverIndex);
   };
 
   render() {
-    const { questions } = this.state;
+    const { questionList } = this.props;
 
     return (
       <div>
-        {questions.map((item, idx) => (
+        {questionList.map((item, idx) => (
           <StyledQuestion
             className="question"
             draggable
@@ -69,15 +60,10 @@ export class HomePage extends React.Component {
             onDragOver={this.setDraggedOver}
             onDrop={this.compare}
             data-idx={idx}
+            key={item.question}
           >
-            <div>
-              <span>Q: </span>
-              <span>{item}</span>
-            </div>
-            <div>
-              <span>A: </span>
-              <input />
-            </div>
+            <label htmlFor={`question-${idx}`}>{item.question}</label>
+            <input id={`question-${idx}`} />
           </StyledQuestion>
         ))}
       </div>
@@ -85,4 +71,16 @@ export class HomePage extends React.Component {
   }
 }
 
-export default HomePage;
+const mapStateToProps = state => ({
+  questionList: state.mainReducer.questionList,
+});
+
+const mapDispatchToProps = dispatch => ({
+  moveQuestion: (selectedElement, position) =>
+    dispatch({ type: MOVE_QUESTION, payload: [selectedElement, position] }),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Form);

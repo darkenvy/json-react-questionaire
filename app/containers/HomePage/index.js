@@ -1,16 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Form from 'containers/HomePage/form';
 import MultiLineInput from 'containers/HomePage/multi-line-input';
+import { StyledContainer } from './styles';
 
-const HomePage = props => {
-  return (
-    <div>
-      <MultiLineInput />
+const HomePage = (/* props */) => (
+  <StyledContainer>
+    <MultiLineInput />
 
-      <Form />
-    </div>
-  );
-}
+    <Form />
+  </StyledContainer>
+);
 
 export default HomePage;
